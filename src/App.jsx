@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <main>
+    <main className="h-[100vh]">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard/:id" element={<Dashboard />} />
