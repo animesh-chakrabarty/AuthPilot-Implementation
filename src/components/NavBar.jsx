@@ -2,10 +2,12 @@ import Login from "@/components/modals/Login";
 import Signup from "@/components/modals/Signup";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import OTP from "./modals/OTP";
 
 const NavBar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
 
   // handle login/signup button click on home page NAV
   const handleButtonClick = () => {
@@ -28,16 +30,31 @@ const NavBar = () => {
     setIsSignupModalOpen(false);
     setIsLoginModalOpen(true);
   };
+
+  const closeSignupLoginModal = () => {
+    setIsLoginModalOpen(false);
+    setIsSignupModalOpen(false);
+  };
+
   return (
-    <div className="h-full">
-      <Button onClick={handleButtonClick}>Login/Signup</Button>
+    <nav className="h-full">
+      <div className="flex items-center justify-between">
+        <Button></Button>
+        <Button onClick={handleButtonClick}>Login/Signup</Button>
+      </div>
+
       {isLoginModalOpen && (
         <Login handleSignupButtonClick={handleSignupButtonClick} />
       )}
       {isSignupModalOpen && (
-        <Signup handleLoginButtonClick={handleLoginButtonClick} />
+        <Signup
+          handleLoginButtonClick={handleLoginButtonClick}
+          setIsOTPModalOpen={setIsOTPModalOpen}
+          closeSignupLoginModal={closeSignupLoginModal}
+        />
       )}
-    </div>
+      {isOTPModalOpen && <OTP />}
+    </nav>
   );
 };
 
