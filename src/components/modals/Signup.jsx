@@ -53,8 +53,25 @@ const Signup = ({
     );
 
     const userData_json = await userData.json();
-    userData_json && dispatch(setUserCredentials(userData_json));
-    userData_json && handleOTPDialogue();
+    if (userData_json) {
+      // set userCredentials to global state
+      dispatch(
+        setUserCredentials({
+          email: userData_json.email,
+          token: userData_json.token,
+        })
+      );
+      // save userCredentials to localStorage
+      localStorage.setItem(
+        "savvy-user-credentials",
+        JSON.stringify({
+          email: userData_json.email,
+          token: userData_json.token,
+        })
+      );
+      // open OTP modal
+      handleOTPDialogue();
+    }
 
     console.log(userData_json);
   };

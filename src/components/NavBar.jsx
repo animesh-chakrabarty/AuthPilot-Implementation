@@ -3,8 +3,12 @@ import Signup from "@/components/modals/Signup";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import OTP from "./modals/OTP";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUserCredentials } from "@/features/authSlice";
 
 const NavBar = () => {
+  const { userCredentials } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isOTPModalOpen, setIsOTPModalOpen] = useState(false);
@@ -36,11 +40,25 @@ const NavBar = () => {
     setIsSignupModalOpen(false);
   };
 
+  const handleLogout = () => {
+    // remove user credentials from localStorage
+    localStorage.removeItem("savvy-user-credentials");
+    // remove user credentials from global state
+    dispatch(removeUserCredentials());
+  };
+
   return (
     <nav className="h-full">
       <div className="flex items-center justify-between">
         <Button></Button>
-        <Button onClick={handleButtonClick}>Login/Signup</Button>
+        {userCredentials?.token ? (
+          <div>
+            <p>{userCredentials.email}</p>
+            <Button onClick={handleLogout}>Logout</Button>
+          </div>
+        ) : (
+          <Button onClick={handleButtonClick}>Login/Signup</Button>
+        )}
       </div>
 
       {isLoginModalOpen && (
