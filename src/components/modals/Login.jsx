@@ -17,13 +17,16 @@ const Login = ({ handleSignupButtonClick }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    // POST req body
     const postData = {
       email,
       password,
     };
+    // POST req. options
     const options = {
       method: "POST",
       headers: {
@@ -31,24 +34,31 @@ const Login = ({ handleSignupButtonClick }) => {
       },
       body: JSON.stringify(postData),
     };
+
+    // POST req. to -
     try {
-      const userCredentials = await fetch(
+      const res = await fetch(
         "http://localhost:4000/api/users/user-login",
         options
       );
-      const userCredentials_json = await userCredentials.json();
 
-      if (userCredentials_json) {
-        // set user credentials to local storage
-        localStorage.setItem(
-          "savvy-user-credentials",
-          JSON.stringify(userCredentials_json)
-        );
-        // set user credentials to global state
-        dispatch(setUserCredentials(userCredentials_json));
+      const res_json = await res.json();
+
+      if (res.ok) {
+        if (res_json) {
+          // set user credentials to local storage
+          localStorage.setItem(
+            "savvy-user-credentials",
+            JSON.stringify(res_json)
+          );
+          // set user credentials to global state
+          dispatch(setUserCredentials(res_json));
+        }
+      } else {
+        setError(res_json.Error || "An unexpected error occured, Please try again");
       }
     } catch (error) {
-      console.log("Error: ", error.message);
+      setError("Network Error, Please try again");
     }
   };
 
@@ -83,6 +93,7 @@ const Login = ({ handleSignupButtonClick }) => {
         </form>
       </CardContent>
       <CardFooter className="flex flex-col">
+        {error && <p className="text-red-500">{error}</p>}
         <Button className="w-full" onClick={handleLogin}>
           Login
         </Button>

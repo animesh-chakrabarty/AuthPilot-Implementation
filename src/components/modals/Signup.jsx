@@ -22,6 +22,7 @@ const Signup = ({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const handleOTPDialogue = () => {
     setIsOTPModalOpen(true);
@@ -30,15 +31,15 @@ const Signup = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, email, password);
 
-    // POST req body
+    // POST req. body
     const data = {
       name,
       email,
       password,
     };
 
+    // POST req. options
     const options = {
       method: "POST",
       headers: {
@@ -47,33 +48,41 @@ const Signup = ({
       body: JSON.stringify(data),
     };
 
-    const userData = await fetch(
-      "http://localhost:4000/api/users/user-signup",
-      options
-    );
+    // POST req. to -
+    try {
+      const res = await fetch(
+        "http://localhost:4000/api/users/user-signup",
+        options
+      );
 
-    const userData_json = await userData.json();
-    if (userData_json) {
-      // set userCredentials to global state
-      dispatch(
-        setUserCredentials({
-          email: userData_json.email,
-          token: userData_json.token,
-        })
-      );
-      // save userCredentials to localStorage
-      localStorage.setItem(
-        "savvy-user-credentials",
-        JSON.stringify({
-          email: userData_json.email,
-          token: userData_json.token,
-        })
-      );
-      // open OTP modal
-      handleOTPDialogue();
+      const res_json = await res.json();
+
+      if (res.ok) {
+        if (res_json) {
+          // set userCredentials to global state
+          dispatch(
+            setUserCredentials({
+              email: res_json.email,
+              token: res_json.token,
+            })
+          );
+          // save userCredentials to localStorage
+          localStorage.setItem(
+            "savvy-user-credentials",
+            JSON.stringify({
+              email: res_json.email,
+              token: res_json.token,
+            })
+          );
+          // open OTP modal
+          handleOTPDialogue();
+        }
+      } else {
+        setError(res_json.Error || "An unexpected error occured, Please try again");
+      }
+    } catch (error) {
+      setError("Network Error, Please try again");
     }
-
-    console.log(userData_json);
   };
 
   const handleKeyDown = (e) => {
@@ -120,6 +129,7 @@ const Signup = ({
         </form>
       </CardContent>
       <CardFooter className="flex flex-col justify-center">
+        {error && <p className="text-red-500">{error}</p>}
         <Button className="w-full" type="submit" onClick={handleSubmit}>
           Signup
         </Button>
