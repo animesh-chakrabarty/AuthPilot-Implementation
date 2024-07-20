@@ -1,3 +1,3 @@
-export const sidebarList = ["Dashboard", "Transactions", "History"];
+export const AppPageNavBarList = ["Dashboard", "Transactions", "History"];
 
 
