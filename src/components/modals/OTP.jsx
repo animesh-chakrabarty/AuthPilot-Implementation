@@ -3,10 +3,13 @@ import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
 import { Button } from "../ui/button";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const OTP = () => {
   const { userCredentials } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
   const [OTP, setOTP] = useState("");
+  const [error, setError] = useState(null);
 
   const verifyOTP = async () => {
     console.log(userCredentials);
@@ -26,16 +29,17 @@ const OTP = () => {
     console.log(options);
 
     try {
-      const verificationMessage = await fetch(
-        "http://localhost:4000/api/verify",
-        options
-      );
+      const res = await fetch("http://localhost:4000/api/verify", options);
 
-      const verificationMessage_json = await verificationMessage.json();
+      const res_json = await res.json();
 
-      console.log(verificationMessage_json);
+      if (res.ok) {
+        navigate("/app");
+      } else {
+        setError(res_json.Error || "An unexpected error occured, Please try again");
+      }
     } catch (error) {
-      console.log("Error: ", error.message);
+      setError("Network Error, Please try again");
     }
   };
 

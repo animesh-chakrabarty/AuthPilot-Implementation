@@ -1,12 +1,13 @@
-import Login from "@/components/modals/Login";
-import Signup from "@/components/modals/Signup";
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import OTP from "./modals/OTP";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUserCredentials } from "@/features/authSlice";
+import { removeUserCredentials } from "../../features/authSlice";
+import { Button } from "../ui/button";
+import Login from "../modals/Login";
+import Signup from "../modals/Signup";
+import OTP from "../modals/OTP";
+import { GoPersonFill } from "react-icons/go";
 
-const NavBar = () => {
+const HomeNavBar = () => {
   const { userCredentials } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -52,12 +53,12 @@ const NavBar = () => {
       <div className="flex items-center justify-between">
         <Button></Button>
         {userCredentials?.token ? (
-          <div>
-            <p>{userCredentials.email}</p>
+          <div className="flex gap-4">
+            <GoPersonFill size={40} className="cursor-pointer" />
             <Button onClick={handleLogout}>Logout</Button>
           </div>
         ) : (
-          <Button onClick={handleButtonClick}>Login/Signup</Button>
+          <Button onClick={handleButtonClick}>Login / Signup</Button>
         )}
       </div>
 
@@ -76,4 +77,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default HomeNavBar;

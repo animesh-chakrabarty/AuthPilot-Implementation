@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 // importing components
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
+import HomePage from "./pages/HomePage";
+import AppPage from "./pages/AppPage";
+// RTK
 import { setUserCredentials } from "./features/authSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -17,10 +18,10 @@ function App() {
   }, []);
 
   return (
-    <main className="h-[100vh] p-8">
+    <main className="h-[100vh]">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard/:id" element={<Dashboard />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/app" element={<AppPage />} />
       </Routes>
     </main>
   );

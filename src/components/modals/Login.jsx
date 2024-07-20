@@ -11,10 +11,12 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useDispatch } from "react-redux";
-import { setUserCredentials } from "@/features/authSlice";
+import { setUserCredentials } from "../../features/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ handleSignupButtonClick }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -53,9 +55,13 @@ const Login = ({ handleSignupButtonClick }) => {
           );
           // set user credentials to global state
           dispatch(setUserCredentials(res_json));
+          // navigate user to dashboard
+          navigate("/app");
         }
       } else {
-        setError(res_json.Error || "An unexpected error occured, Please try again");
+        setError(
+          res_json.Error || "An unexpected error occured, Please try again"
+        );
       }
     } catch (error) {
       setError("Network Error, Please try again");

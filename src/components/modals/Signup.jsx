@@ -10,7 +10,7 @@ import {
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { setUserCredentials } from "@/features/authSlice";
+import { setUserCredentials } from "../../features/authSlice";
 import { useDispatch } from "react-redux";
 
 const Signup = ({
@@ -23,6 +23,7 @@ const Signup = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOTPDialogue = () => {
     setIsOTPModalOpen(true);
@@ -30,6 +31,7 @@ const Signup = ({
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
 
     // POST req. body
@@ -76,9 +78,12 @@ const Signup = ({
           );
           // open OTP modal
           handleOTPDialogue();
+          setIsLoading(false);
         }
       } else {
-        setError(res_json.Error || "An unexpected error occured, Please try again");
+        setError(
+          res_json.Error || "An unexpected error occured, Please try again"
+        );
       }
     } catch (error) {
       setError("Network Error, Please try again");
@@ -131,7 +136,7 @@ const Signup = ({
       <CardFooter className="flex flex-col justify-center">
         {error && <p className="text-red-500">{error}</p>}
         <Button className="w-full" type="submit" onClick={handleSubmit}>
-          Signup
+          {!isLoading ? "Signup" : "Signing up..."}
         </Button>
         <p>
           Already have an account ?
