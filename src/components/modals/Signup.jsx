@@ -84,6 +84,7 @@ const Signup = ({
         setError(
           res_json.Error || "An unexpected error occured, Please try again"
         );
+        setIsLoading(false);
       }
     } catch (error) {
       setError("Network Error, Please try again");

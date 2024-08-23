@@ -20,9 +20,11 @@ const Login = ({ handleSignupButtonClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     // POST req body
     const postData = {
       email,
@@ -46,6 +48,7 @@ const Login = ({ handleSignupButtonClick }) => {
 
       const res_json = await res.json();
 
+      console.log(res_json)
       if (res.ok) {
         if (res_json) {
           // set user credentials to local storage
@@ -62,6 +65,7 @@ const Login = ({ handleSignupButtonClick }) => {
         setError(
           res_json.Error || "An unexpected error occured, Please try again"
         );
+        setIsLoading(false);
       }
     } catch (error) {
       setError("Network Error, Please try again");
